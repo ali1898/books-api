@@ -1,0 +1,38 @@
+info:
+  name: Patch Book - 05
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/books/{{bookId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "publicationYear": 2009
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Partial update successful", () => {
+          expect(res.getStatus()).to.equal(200);
+        })
+
+        test("Year change to 2009", () => {
+          expect(res.getBody().publicationYear).to.equal(2009);
+        })
+
+        test("Title remains unchanged", () => {
+          expect(res.getBody().title).to.equal("Clean Code - Updated");
+        })
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

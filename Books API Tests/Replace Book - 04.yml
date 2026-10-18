@@ -1,0 +1,37 @@
+info:
+  name: Replace Book - 04
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/books/{{bookId}}"
+  body:
+    type: json
+    data: |
+      
+      {
+        "title": "Clean Code - Updated",
+        "author": "Robert C. Martin",
+        "publicationYear": 2008
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Book updated successfully", () => {
+          expect(res.getStatus()).to.equal(200);
+        })
+
+        test("Updated title is correct", () => {
+          expect(res.getBody().title).to.equal("Clean Code - Updated");
+        })
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

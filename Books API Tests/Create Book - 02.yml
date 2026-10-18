@@ -1,0 +1,46 @@
+info:
+  name: Create Book - 02
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/books"
+  body:
+    type: json
+    data: |
+      {
+        "title": "Clean Code",
+        "author": "Robert C. Martin",
+        "publicationYear": 2008
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Book created successfully", () => {
+          expect(res.getStatus()).to.equal(201);
+        })
+
+        test("Book has an ID", () => {
+          expect(res.getBody()).to.have.property("id");
+        });
+
+        test("Book title is correct", () => {
+          expect(res.getBody().title)
+            .to.equal("Clean Code");
+        });
+
+        // Save ID for the next requests
+        if (res.getStatus() === 201) {
+          bru.setVar("bookId", res.getBody().id);
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
